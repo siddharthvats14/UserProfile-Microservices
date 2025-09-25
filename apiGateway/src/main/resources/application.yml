@@ -1,12 +1,36 @@
+
 server:
- port: 8080
- servlet:
+  port: 8087
+  servlet:
     context-path: /
 spring:
   application:
     name: apigateway
   cloud:
     gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      routes:
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/**
+        - id: person-service
+          uri: lb://PERSON-SERVICE
+          predicates:
+            - Path=/person-service/**
+        - id: address-service
+          uri: lb://ADDRESS-SERVICE
+          predicates:
+            - Path=/address-service/**
+        - id: contact-service
+          uri: lb://CONTACT-SERVICE
+          predicates:
+            - Path=/contact-service/**
+        - id: web-app
+          uri: lb://WEB-APP
+          predicates:
+            - Path=/web-app/**
       server:
         webflux:
           httpclient:
@@ -14,17 +38,6 @@ spring:
           discovery:
             locator:
               enabled: true
-          default-filters:
-            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
-          routes:
-            - id: ms-service1
-              uri: lb://SERVICE1
-              predicates:
-                - Path=/api/service1/**
-            - id: ms-service2
-              uri: lb://SERVICE2
-              predicates:
-                - Path=/api/service2/**
 logging:
   level:
     org.springframework.cloud.gateway: DEBUG

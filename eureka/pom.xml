@@ -14,27 +14,20 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.0</version>
+		<version>2.7.18</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<properties>
-		<java.version>24</java.version>
-		<spring-cloud.version>2025.0.0</spring-cloud.version>
+		<java.version>17</java.version>
+		<spring-cloud.version>2021.0.8</spring-cloud.version>
 	</properties>
-	<repositories>
-		<repository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>nexus-ci</id>
-			<url>https://nexus-ci.onefiserv.net/repository/Maven_Central</url>
-		</repository>
-	</repositories>
+	   <repositories>
+		   <repository>
+			   <id>nexus-central</id>
+			   <name>Nexus Central Repository</name>
+			   <url>https://nexus.onefiserv.net/repository/Maven_Central</url>
+		   </repository>
+	   </repositories>
 	<build>
 		<plugins>
 			<plugin>
@@ -44,38 +37,95 @@
 		</plugins>
 	</build>
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
-		</dependency>
-
-		<!-- Actuator (Optional for Monitoring) -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.zoomba-lang</groupId>
-			<artifactId>commons-jxpath</artifactId>
-			<version>1.4</version>
-		</dependency>
+	   <dependency>
+		   <groupId>javax.servlet</groupId>
+		   <artifactId>javax.servlet-api</artifactId>
+		   <version>4.0.1</version>
+		   <scope>provided</scope>
+	   </dependency>
+	   <dependency>
+		   <groupId>org.yaml</groupId>
+		   <artifactId>snakeyaml</artifactId>
+		   <version>1.33</version>
+	   </dependency>
+		   <dependency>
+			   <groupId>org.springframework.cloud</groupId>
+			   <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+		   </dependency>
+		   <dependency>
+			   <groupId>org.springframework.boot</groupId>
+			   <artifactId>spring-boot-starter-actuator</artifactId>
+		   </dependency>
+		   <dependency>
+			   <groupId>org.springframework.boot</groupId>
+			   <artifactId>spring-boot-starter-test</artifactId>
+			   <scope>test</scope>
+		   </dependency>
+		   <dependency>
+			   <groupId>org.springframework.boot</groupId>
+			   <artifactId>spring-boot-starter-web</artifactId>
+		   </dependency>
+		   <dependency>
+			   <groupId>org.springframework.security</groupId>
+			   <artifactId>spring-security-crypto</artifactId>
+			   <version>6.4.4</version>
+		   </dependency>
+		   <!-- Force Tomcat 9.x for Spring Boot 2.7.x compatibility -->
+		   <dependency>
+			   <groupId>org.apache.tomcat.embed</groupId>
+			   <artifactId>tomcat-embed-core</artifactId>
+			   <version>9.0.75</version>
+		   </dependency>
+		   <dependency>
+			   <groupId>org.apache.tomcat.embed</groupId>
+			   <artifactId>tomcat-embed-websocket</artifactId>
+			   <version>9.0.75</version>
+		   </dependency>
+		   <dependency>
+			   <groupId>org.apache.tomcat.embed</groupId>
+			   <artifactId>tomcat-embed-el</artifactId>
+			   <version>9.0.75</version>
+		   </dependency>
+		   <dependency>
+			   <groupId>org.projectlombok</groupId>
+			   <artifactId>lombok</artifactId>
+			   <optional>true</optional>
+		   </dependency>
 	</dependencies>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>${spring-cloud.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
+	   <dependencyManagement>
+		   <dependencies>
+			   <dependency>
+				   <groupId>org.springframework.cloud</groupId>
+				   <artifactId>spring-cloud-dependencies</artifactId>
+				   <version>${spring-cloud.version}</version>
+				   <type>pom</type>
+				   <scope>import</scope>
+			   </dependency>
+			   <!-- Ensure Tomcat 9.x is used for all embedded Tomcat dependencies -->
+			   <dependency>
+				   <groupId>org.apache.tomcat.embed</groupId>
+				   <artifactId>tomcat-embed-core</artifactId>
+				   <version>9.0.75</version>
+			   </dependency>
+			   <dependency>
+				   <groupId>org.apache.tomcat.embed</groupId>
+				   <artifactId>tomcat-embed-websocket</artifactId>
+				   <version>9.0.75</version>
+			   </dependency>
+			   <dependency>
+				   <groupId>org.apache.tomcat.embed</groupId>
+				   <artifactId>tomcat-embed-el</artifactId>
+				   <version>9.0.75</version>
+			   </dependency>
+		   </dependencies>
 	</dependencyManagement>
+
+   <pluginRepositories>
+	   <pluginRepository>
+		   <id>nexus-central</id>
+		   <name>Nexus Central Plugins Repository</name>
+		   <url>https://nexus.onefiserv.net/repository/Maven_Central</url>
+	   </pluginRepository>
+   </pluginRepositories>
 </project>
