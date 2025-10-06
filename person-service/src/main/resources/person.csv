@@ -1,0 +1,10 @@
+personId,firstName,lastName,roleId,addressId,contactId,age
+1,Siddharth,Vats,1,101,1,22
+2,Sushant,Pawar,2,202,2,35
+3,Garima,Gupta,3,303,3,31
+4,Ritvik,Bharadwaj,4,404,4,25
+5,Abhishek,S,5,505,5,24
+6,ronit,,0,506,6,23
+7,Prakash,,0,507,7,43
+8,Prakash,,0,508,8,43
+9,Ram,,0,509,9,23

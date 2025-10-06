@@ -1,0 +1,4 @@
+roleId,roleName,description
+1,ADMIN,Administrator role
+2,USER,Standard user role
+3,GUEST,Guest role

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Sign Up</title>
+    <meta charset="UTF-8">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: #f4f6f8;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow-y: auto;
+        }
+        .signup-card {
+            background: #fff;
+            padding: 2.5rem 2.5rem 2rem 2.5rem;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            min-width: 340px;
+            max-width: 420px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .signup-title {
+            text-align: center;
+            font-size: 1.7rem;
+            color: #2d3748;
+            margin-bottom: 1.2rem;
+            font-weight: 600;
+        }
+        .error {
+            color: #e53e3e;
+            background: #fff5f5;
+            border: 1px solid #fed7d7;
+            border-radius: 6px;
+            padding: 0.7rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        form label {
+            display: block;
+            margin-top: 1rem;
+            margin-bottom: 0.3rem;
+            color: #3182ce;
+            font-weight: 500;
+        }
+        form input {
+            width: 100%;
+            padding: 0.6rem;
+            border-radius: 6px;
+            border: 1px solid #cbd5e0;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        button[type="submit"] {
+            width: 100%;
+            margin-top: 1.5rem;
+            padding: 0.7rem;
+            background: #3182ce;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: center;
+            transition: background 0.2s;
+        }
+        button[type="submit"]:hover {
+            background: #2563eb;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 1rem;
+        }
+        .login-link a {
+            color: #3182ce;
+            text-decoration: underline;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        window.onload = function() {
+            window.scrollTo(0, 0);
+        };
+    </script>
+    <div class="signup-card">
+        <div class="signup-title">Sign Up</div>
+        <div th:if="${error}" class="error" th:text="${error}"></div>
+        <form th:action="@{/web-app/signup}" method="post">
+            <label for="loginName">Username:</label>
+            <input type="text" id="loginName" name="loginName" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" required>
+
+            <label for="houseNumber">House Number:</label>
+            <input type="text" id="houseNumber" name="houseNumber" required>
+
+            <label for="streetNumber">Street Number:</label>
+            <input type="text" id="streetNumber" name="streetNumber" required>
+
+            <label for="city">City:</label>
+            <input type="text" id="city" name="city" required>
+
+            <label for="state">State:</label>
+            <input type="text" id="state" name="state" required>
+
+            <label for="country">Country:</label>
+            <input type="text" id="country" name="country" required>
+
+            <label for="pincode">Pincode:</label>
+            <input type="text" id="pincode" name="pincode" required>
+
+            <label for="primaryContact">Primary Contact:</label>
+            <input type="text" id="primaryContact" name="primaryContact" required>
+
+            <label for="secondaryContact">Secondary Contact:</label>
+            <input type="text" id="secondaryContact" name="secondaryContact">
+
+            <label for="email">Email ID:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="secondaryEmail">Secondary Email:</label>
+            <input type="email" id="secondaryEmail" name="secondaryEmail">
+
+            <button type="submit">Sign Up</button>
+        </form>
+        <div class="login-link">
+            <a th:href="@{/web-app/login}">Already have an account? Login here</a>
+        </div>
+    </div>
+</body>
+</html>

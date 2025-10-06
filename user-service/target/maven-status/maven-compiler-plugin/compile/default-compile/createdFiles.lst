@@ -1,0 +1,3 @@
+com\fiserv\userservice\dto\UserDTO.class
+com\fiserv\userservice\controller\UserController.class
+com\fiserv\userservice\UserServiceApplication.class

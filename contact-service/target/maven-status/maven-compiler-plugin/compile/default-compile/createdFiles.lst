@@ -1,0 +1,3 @@
+com\fiserv\contactservice\dto\ContactDTO.class
+com\fiserv\contactservice\ContactServiceApplication.class
+com\fiserv\contactservice\controller\ContactController.class

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Person Details</title>
+    <style>
+        body {
+            background: #f4f6f8;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .details-card {
+            background: #fff;
+            padding: 2.5rem 2.5rem 2rem 2.5rem;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            min-width: 340px;
+            max-width: 420px;
+        }
+        .welcome {
+            text-align: center;
+            font-size: 1.7rem;
+            color: #2d3748;
+            margin-bottom: 1.2rem;
+        }
+        .section {
+            margin-bottom: 1.5rem;
+        }
+        .section-title {
+            font-size: 1.2rem;
+            color: #3182ce;
+            margin-bottom: 0.7rem;
+            font-weight: 600;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        li {
+            padding: 0.3rem 0;
+            font-size: 1rem;
+            color: #4a5568;
+            border-bottom: 1px solid #f1f1f1;
+        }
+        li:last-child {
+            border-bottom: none;
+        }
+        .logout-btn {
+            display: block;
+            width: 100%;
+            margin-top: 1.5rem;
+            padding: 0.7rem;
+            background: #3182ce;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .logout-btn:hover {
+            background: #2563eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="details-card">
+        <div class="welcome">Welcome, <span th:text="${personName}"></span>!</div>
+        <div class="section">
+            <div class="section-title">Person Details</div>
+            <ul>
+                <li>Name: <span th:text="${personName}"></span></li>
+                <li>Age: <span th:text="${age}"></span></li>
+            </ul>
+        </div>
+        <div class="section">
+            <div class="section-title">Address</div>
+            <ul>
+                <li>House Number: <span th:text="${houseNumber}"></span></li>
+                <li>Street Number: <span th:text="${streetNumber}"></span></li>
+                <li>City: <span th:text="${city}"></span></li>
+                <!--<li>Town: <span th:text="${town}"></span></li>-->
+                <li>State: <span th:text="${state}"></span></li>
+                <li>Country: <span th:text="${country}"></span></li>
+                <li>Pincode: <span th:text="${pincode}"></span></li>
+            </ul>
+        </div>
+        <div class="section">
+            <div class="section-title">Contact</div>
+            <ul>
+                <li>Primary Contact: <span th:text="${primaryContact}"></span></li>
+                <li>Secondary Contact: <span th:text="${secondaryContact}"></span></li>
+                <li>Email ID: <span th:text="${primaryEmail}"></span></li>
+                <li>Secondary Email ID: <span th:text="${secondaryEmail}"></span></li>
+            </ul>
+        </div>
+    <a th:href="@{/web-app/logout}" class="logout-btn">Logout</a>
+    </div>
+</body>
+</html>

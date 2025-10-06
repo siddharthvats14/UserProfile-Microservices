@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login</title>
+    <style>
+        body {
+            background: #f4f6f8;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-card {
+            background: #fff;
+            padding: 2rem 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            min-width: 320px;
+        }
+        .login-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #2d3748;
+        }
+        .error {
+            color: #e53e3e;
+            background: #fff5f5;
+            border: 1px solid #e53e3e;
+            border-radius: 6px;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-weight: 500;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #4a5568;
+            font-size: 1rem;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            font-size: 1rem;
+            background: #f7fafc;
+            transition: border-color 0.2s;
+        }
+        input[type="text"]:focus, input[type="password"]:focus {
+            border-color: #3182ce;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background: #3182ce;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #2563eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <div class="login-title">Login</div>
+    <div th:if="${error}" class="error" th:text="${error}">Authentication failed!</div>
+    <form th:action="@{/web-app/login}" method="post">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required autocomplete="username">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required autocomplete="current-password">
+            <button type="submit">Login</button>
+        </form>
+        <div style="text-align:center; margin-top:1rem;">
+            <a th:href="@{/web-app/signup}" style="color:#3182ce; text-decoration:underline; font-size:1rem;">Don't have an account? Sign up here</a>
+        </div>
+    </div>
+</body>
+</html>

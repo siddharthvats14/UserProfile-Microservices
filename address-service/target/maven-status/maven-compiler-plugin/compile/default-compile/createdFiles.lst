@@ -1,0 +1,3 @@
+com\fiserv\addressservice\AddressServiceApplication.class
+com\fiserv\addressservice\controller\AddressController.class
+com\fiserv\addressservice\dto\AddressDTO.class

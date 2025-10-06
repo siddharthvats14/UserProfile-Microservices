@@ -1,0 +1,3 @@
+com\fiserv\personservice\PersonServiceApplication.class
+com\fiserv\personservice\controller\PersonController.class
+com\fiserv\personservice\dto\PersonDTO.class

@@ -1,0 +1,10 @@
+contactId,primaryMobileNumber,secondaryMobileNumber,primaryEmail,secondaryEmail
+1,5551234567,5559876543,siddharth@example.com,sid@example.com
+2,5552345678,5558765432,sushant@example.com,sushantpawar@example.com
+3,5553456789,5557654321,garima@example.com,garima.gupta@example.com
+4,5554567890,5556543210,ritvik@example.com,ritvik.b@example.com
+5,5555678901,5555432109,abhishek@example.com,abhishek.alt@example.com
+6,9087654321,807654321,ronit@example.com,ronit.alt@example.com
+7,9807654321,7098654321,prakash@example.com,prakash.alt@example.com
+8,9807654321,7098654321,prakash@example.com,prakash.alt@example.com
+9,7098654321,904512749,ram@example.com,ram.alt@example.com

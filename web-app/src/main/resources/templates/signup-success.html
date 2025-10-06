@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Signup Success</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            background: #f4f6f8;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .success-card {
+            background: #fff;
+            padding: 2.5rem 2.5rem 2rem 2.5rem;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            min-width: 340px;
+            max-width: 420px;
+            text-align: center;
+        }
+        .success-title {
+            font-size: 1.7rem;
+            color: #38a169;
+            margin-bottom: 1.2rem;
+            font-weight: 600;
+        }
+        .success-message {
+            color: #2d3748;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+        .login-link {
+            display: block;
+            margin-top: 1.2rem;
+            color: #3182ce;
+            text-decoration: underline;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        .login-link:hover {
+            color: #2563eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="success-card">
+        <div class="success-title">Signup Successful!</div>
+        <div class="success-message" th:text="${message}"></div>
+        <a class="login-link" th:href="@{/web-app/login}">Go to Login</a>
+    </div>
+</body>
+</html>

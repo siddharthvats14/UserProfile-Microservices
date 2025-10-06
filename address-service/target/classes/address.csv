@@ -1,0 +1,11 @@
+addressId,houseNumber,streetNumber,city,state,country,pinCode
+101,101,Main St,Springfield,IL,USA,62701
+202,202,Oak Ave,Centerville,OH,USA,45459
+303,303,Pine Rd,Laketown,FL,USA,33801
+404,404,Maple Dr,Greenville,SC,USA,29601
+505,505,Birch Ln,Franklin,MA,USA,02038506
+
+506,123 Sector ABC ,2,Noida,UP,India,123456
+507,32 Sector AB,90,Noida,UP,India,321456
+508,32 Sector AB,90,Noida,UP,India,321456
+509,43 Sector TL,34,Noida,UP,India,765890
