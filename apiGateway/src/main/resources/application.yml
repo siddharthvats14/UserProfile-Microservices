@@ -8,6 +8,8 @@ spring:
     name: apigateway
   cloud:
     gateway:
+      forwarded-headers:
+        enabled: true
       default-filters:
         - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
       routes:
