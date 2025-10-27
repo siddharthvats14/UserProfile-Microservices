@@ -96,7 +96,7 @@
     <div class="signup-card">
         <div class="signup-title">Sign Up</div>
         <div th:if="${error}" class="error" th:text="${error}"></div>
-        <form th:action="@{/web-app/signup}" method="post">
+    <form th:action="@{/web-app/signup}" method="post">
             <label for="loginName">Username:</label>
             <input type="text" id="loginName" name="loginName" required>
 
@@ -105,6 +105,9 @@
 
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required>
+            
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" required>
 
             <label for="age">Age:</label>
             <input type="number" id="age" name="age" required>

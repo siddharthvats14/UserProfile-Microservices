@@ -20,7 +20,7 @@ public class AddressCsvReader {
             boolean firstLine = true;
             while ((line = reader.readLine()) != null) {
                 if (firstLine) { firstLine = false; continue; }
-                String[] parts = line.split(",");
+                String[] parts = line.split(",");   
                 if (parts.length < 7) continue;
                 AddressDTO address = new AddressDTO();
                 address.setAddressId(Integer.valueOf(parts[0]));

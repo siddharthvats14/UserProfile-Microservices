@@ -16,10 +16,13 @@ import org.springframework.http.ResponseEntity;
 import java.util.Map;
 import java.util.HashMap;
 
-@RestController
+@RestController 
 public class UserController {
-    @PostMapping(value = "/user-service/signup", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping("/user-service/signup")
     public ResponseEntity<?> signup(@RequestBody Map<String, String> signupData) {
+        System.out.println("[UserController] SignupData keys: " + signupData.keySet());
+        System.out.println("[UserController] SignupData values: " + signupData);
+        System.out.println("[UserController] Received from frontend lastName: " + signupData.get("lastName"));
         try {
 
             // 1. Call address-service to create address
@@ -48,9 +51,11 @@ public class UserController {
             // 3. Call person-service to create person with addressId and contactId
             Map<String, Object> personRequest = new HashMap<>();
             personRequest.put("name", signupData.get("name"));
+            personRequest.put("lastName", signupData.get("lastName"));
             personRequest.put("age", signupData.get("age"));
             personRequest.put("addressId", addressId);
             personRequest.put("contactId", contactId);
+            System.out.println("Forwarding lastName to person-service: " + personRequest.get("lastName")); 
             if (signupData.containsKey("roleId")) {
                 personRequest.put("roleId", signupData.get("roleId"));
             }
@@ -65,14 +70,15 @@ public class UserController {
                 if (u.getUserId() != null && u.getUserId() > maxUserId) maxUserId = u.getUserId();
             }
             int userId = maxUserId + 1;
-            String loginName = signupData.get("loginName");
-            String password = signupData.get("password");
+            String loginName = (String)signupData.get("loginName");
+            String password = (String)signupData.get("password");
             UserDTO newUser = new UserDTO();
             newUser.setUserId(userId);
             newUser.setLoginName(loginName);
             newUser.setPassword(password);
             newUser.setPersonId(personId);
             newUser.setRetry(0);
+            System.out.println("[UserController] Constructed UserDTO: userId=" + newUser.getUserId() + ", loginName=" + newUser.getLoginName() + ", password=" + newUser.getPassword() + ", personId=" + newUser.getPersonId() + ", retry=" + newUser.getRetry());
             UserCsvReader.appendUserToCsv("src/main/resources/user.csv", newUser);
 
             Map<String, Object> result = new HashMap<>();

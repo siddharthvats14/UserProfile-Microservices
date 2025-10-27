@@ -29,6 +29,7 @@ public class SignupController {
     @PostMapping("/signup")
     public String processSignup(@RequestParam Map<String, String> params, Model model) {
     try {
+            System.out.println("[SignupController] Incoming params: " + params);
             String gatewayBaseUrl = "http://localhost:8087";
             String signupUrl = gatewayBaseUrl + "/user-service/signup";
             HttpHeaders headers = new HttpHeaders();
@@ -37,6 +38,7 @@ public class SignupController {
             signupData.put("loginName", params.getOrDefault("loginName", ""));
             signupData.put("password", params.getOrDefault("password", ""));
             signupData.put("name", params.getOrDefault("name", ""));
+            signupData.put("lastName", params.getOrDefault("lastName", ""));
             signupData.put("age", params.getOrDefault("age", ""));
             signupData.put("houseNumber", params.getOrDefault("houseNumber", ""));
             signupData.put("streetNumber", params.getOrDefault("streetNumber", ""));
@@ -48,6 +50,7 @@ public class SignupController {
             signupData.put("secondaryContact", params.getOrDefault("secondaryContact", ""));
             signupData.put("email", params.getOrDefault("email", ""));
             signupData.put("secondaryEmail", params.getOrDefault("secondaryEmail", ""));
+            System.out.println("[SignupController] Constructed signupData: " + signupData);
             HttpEntity<Map<String, String>> request = new HttpEntity<>(signupData, headers);
             ResponseEntity<Map> response = restTemplate.postForEntity(signupUrl, request, Map.class);
             if (response.getStatusCodeValue() == 200) {
