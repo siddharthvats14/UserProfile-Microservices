@@ -1,4 +1,5 @@
-#Microservices-UserManagement
+Microservices-UserManagement
+-
 
 A Spring Boot microservices application for user profile management. This project demonstrates a modular architecture with separate services for user, person, contact, address, authentication, and a web frontend. It features:
 
