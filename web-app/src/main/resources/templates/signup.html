@@ -105,6 +105,11 @@
         <div class="signup-title">Sign Up</div>
         <div th:if="${error}" class="error" th:text="${error}"></div>
     <form th:action="@{/web-app/signup}" method="post">
+            <!-- Hidden fields for admin mode -->
+            <input type="hidden" name="adminMode" th:value="${adminMode}" th:if="${adminMode}">
+            <input type="hidden" name="adminUsername" th:value="${adminUsername}" th:if="${adminUsername}">
+            <input type="hidden" name="adminPassword" th:value="${adminPassword}" th:if="${adminPassword}">
+            
             <label for="loginName">Username:</label>
             <input type="text" id="loginName" name="loginName" required>
 

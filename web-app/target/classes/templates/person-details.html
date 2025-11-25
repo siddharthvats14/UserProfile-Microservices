@@ -64,6 +64,24 @@
         .logout-btn:hover {
             background: #2563eb;
         }
+        .add-user-btn {
+            display: block;
+            width: 100%;
+            margin-top: 1rem;
+            padding: 0.7rem;
+            background: #38a169;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .add-user-btn:hover {
+            background: #2f855a;
+        }
         .users-table {
             width: 100%;
             border-collapse: collapse;
@@ -146,16 +164,16 @@
                 </thead>
                 <tbody>
                     <tr th:each="user : ${allUsers}">
-                        <td th:text="${user.userId}"></td>
-                        <td th:text="${user.loginName}"></td>
-                        <td th:text="${user.firstName} + ' ' + ${user.lastName}"></td>
-                        <td th:text="${user.age}"></td>
+                        <td th:text="${user['userId']}"></td>
+                        <td th:text="${user['loginName']}"></td>
+                        <td th:text="${user['firstName']} + ' ' + ${user['lastName']}"></td>
+                        <td th:text="${user['age']}"></td>
                         <td th:if="${roleId == 1}">
                             <form th:action="@{/web-app/delete-user}" method="post" style="display:inline;">
-                                <input type="hidden" name="userId" th:value="${user.userId}" />
+                                <input type="hidden" name="userId" th:value="${user['userId']}" />
                                 <input type="hidden" name="username" th:value="${username}" />
                                 <input type="hidden" name="password" th:value="${password}" />
-                                <button type="submit" class="delete-btn" th:disabled="${user.userId == currentUserId}">Delete</button>
+                                <button type="submit" class="delete-btn" th:disabled="${user['userId'] == currentUserId}">Delete</button>
                             </form>
                         </td>
                     </tr>
@@ -163,6 +181,9 @@
             </table>
         </div>
 
+        <!-- Add User button for ADMIN only -->
+        <a th:if="${roleId == 1}" th:href="@{/web-app/signup(adminMode=true,adminUsername=${username},adminPassword=${password})}" class="add-user-btn">Add User</a>
+        
         <a th:href="@{/web-app/logout}" class="logout-btn">Logout</a>
     </div>
 </body>

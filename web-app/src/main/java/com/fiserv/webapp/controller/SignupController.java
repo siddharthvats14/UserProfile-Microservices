@@ -22,7 +22,10 @@ public class SignupController {
     private RestTemplate restTemplate;
 
     @GetMapping("/signup")
-    public String showSignupForm(Model model) {
+    public String showSignupForm(@RequestParam(required = false) String adminMode,
+                                  @RequestParam(required = false) String adminUsername,
+                                  @RequestParam(required = false) String adminPassword,
+                                  Model model) {
         try {
             String gatewayBaseUrl = "http://localhost:8087";
             String rolesUrl = gatewayBaseUrl + "/role-service/roles";
@@ -30,6 +33,13 @@ public class SignupController {
             java.util.List<?> roles = restTemplate.getForObject(rolesUrl, java.util.List.class);
             System.out.println("[SignupController] Roles fetched: " + roles);
             model.addAttribute("roles", roles);
+            
+            // Pass admin mode parameters to the view
+            if ("true".equals(adminMode)) {
+                model.addAttribute("adminMode", true);
+                model.addAttribute("adminUsername", adminUsername);
+                model.addAttribute("adminPassword", adminPassword);
+            }
         } catch (Exception e) {
             System.err.println("[SignupController] Error fetching roles: " + e.getMessage());
             e.printStackTrace();
@@ -66,7 +76,19 @@ public class SignupController {
             System.out.println("[SignupController] Constructed signupData: " + signupData);
             HttpEntity<Map<String, String>> request = new HttpEntity<>(signupData, headers);
             ResponseEntity<Map> response = restTemplate.postForEntity(signupUrl, request, Map.class);
+            
+            // Check if this is admin mode
+            String adminMode = params.get("adminMode");
+            String adminUsername = params.get("adminUsername");
+            String adminPassword = params.get("adminPassword");
+            
             if (response.getStatusCodeValue() == 200) {
+                // If admin mode, redirect back to admin's person-details page
+                if ("true".equals(adminMode) && adminUsername != null && adminPassword != null) {
+                    return "redirect:/web-app/login-and-continue?username=" + adminUsername + "&password=" + adminPassword;
+                }
+                
+                // Regular signup flow
                 model.addAttribute("message", "Signup successful! Your login name is: " + response.getBody().get("loginName"));
                 return "signup-success";
             } else {
