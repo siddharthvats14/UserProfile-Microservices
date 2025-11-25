@@ -1,3 +1,4 @@
+com\fiserv\webapp\controller\SignupController.class
 com\fiserv\webapp\WebAppApplication.class
 com\fiserv\webapp\config\RestTemplateConfig.class
 com\fiserv\webapp\controller\LoginController.class

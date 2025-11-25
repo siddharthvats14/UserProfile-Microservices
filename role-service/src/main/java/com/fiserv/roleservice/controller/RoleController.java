@@ -10,6 +10,11 @@ import java.util.List;
 
 @RestController
 public class RoleController {
+    @GetMapping("/role-service/roles")
+    public List<RoleDTO> getAllRoles() throws IOException {
+        return RoleCsvReader.readRolesFromCsv("role.csv");
+    }
+
     @GetMapping("/role-service/role/{roleId}")
     public RoleDTO getRole(@PathVariable Integer roleId) throws IOException {
         List<RoleDTO> roles = RoleCsvReader.readRolesFromCsv("role.csv");

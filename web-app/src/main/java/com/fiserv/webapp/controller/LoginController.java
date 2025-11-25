@@ -25,22 +25,19 @@ public class LoginController {
     @PostMapping("/login")
     public String processLogin(@RequestParam String username, @RequestParam String password, Model model) {
         try {
-            System.out.println("LoginController: username='" + username + "' (len=" + username.length() + ")");
-            System.out.println("LoginController: password='" + password + "' (len=" + password.length() + ")");
             String gatewayBaseUrl = "http://localhost:8087";
             String userUrl = gatewayBaseUrl + "/user-service/login?loginName=" + username + "&password=" + password;
-            System.out.println("LoginController: userUrl=" + userUrl);
+            
             org.springframework.http.ResponseEntity<java.util.LinkedHashMap> response = restTemplate.getForEntity(userUrl, java.util.LinkedHashMap.class);
             int statusCode = response.getStatusCodeValue();
             java.util.LinkedHashMap<String, Object> user = (java.util.LinkedHashMap<String, Object>) response.getBody(); // Safe cast for map response
-            System.out.println("LoginController: user-service response=" + user);
             java.util.LinkedHashMap<String, Object> userObj = null;
             if (statusCode == 200 && user != null) {
                 userObj = (java.util.LinkedHashMap<String, Object>) user.get("user");
-                System.out.println("LoginController: userObj=" + userObj);
             }
             if (userObj != null && username.equals(userObj.get("loginName")) && password.equals(userObj.get("password"))) {
                 model.addAttribute("username", username);
+                model.addAttribute("password", password);
                 // Extract personId, addressId, contactId from userObj
                 Object personIdObj = userObj.get("personId");
                 Integer personId = personIdObj != null ? Integer.valueOf(personIdObj.toString()) : null;
@@ -59,6 +56,28 @@ public class LoginController {
                 String contactUrl = gatewayBaseUrl + "/contact-service/contact?contactId=" + contactId;
                 java.util.LinkedHashMap<String, Object> contact = (java.util.LinkedHashMap<String, Object>) restTemplate.getForObject(contactUrl, java.util.LinkedHashMap.class);
 
+                // Fetch role
+                Object roleIdObj = person != null ? person.get("roleId") : null;
+                Integer roleId = roleIdObj != null ? Integer.valueOf(roleIdObj.toString()) : null;
+                String roleName = "N/A";
+                String description = "N/A";
+                if (roleId != null && roleId > 0) {
+                    try {
+                        String roleUrl = gatewayBaseUrl + "/role-service/role/" + roleId;
+                        java.util.LinkedHashMap<String, Object> role = (java.util.LinkedHashMap<String, Object>) restTemplate.getForObject(roleUrl, java.util.LinkedHashMap.class);
+                        if (role != null) {
+                            roleName = role.getOrDefault("roleName", "N/A").toString();
+                            description = role.getOrDefault("description", "N/A").toString();
+                        }
+                    } catch (Exception e) {
+                        System.err.println("Error fetching role: " + e.getMessage());
+                    }
+                }
+                model.addAttribute("roleName", roleName);
+                model.addAttribute("description", description);
+                model.addAttribute("roleId", roleId != null ? roleId : 0);
+                model.addAttribute("currentUserId", userObj.get("userId"));
+
                 if (person != null) {
                     String firstName = person.getOrDefault("firstName", "").toString();
                     String lastName = person.getOrDefault("lastName", "").toString();
@@ -67,6 +86,18 @@ public class LoginController {
                 } else {
                     model.addAttribute("personName", "N/A");
                     model.addAttribute("age", "N/A");
+                }
+
+                // Fetch all users for ADMIN (roleId=1) or SUPER_USER (roleId=2)
+                if (roleId != null && (roleId == 1 || roleId == 2)) {
+                    try {
+                        String allUsersUrl = gatewayBaseUrl + "/user-service/users";
+                        java.util.List<?> allUsers = restTemplate.getForObject(allUsersUrl, java.util.List.class);
+                        model.addAttribute("allUsers", allUsers);
+                    } catch (Exception e) {
+                        System.err.println("Error fetching all users: " + e.getMessage());
+                        model.addAttribute("allUsers", new java.util.ArrayList<>());
+                    }
                 }
 
                 if (address != null) {
@@ -120,5 +151,27 @@ public String logout(HttpServletRequest request) {
         return "redirect:" + forwardedProto + "://" + forwardedHost + "/web-app/login";
     }
     return "redirect:/web-app/login";
+}
+
+@PostMapping("/delete-user")
+public String deleteUser(@RequestParam Integer userId, @RequestParam String username, @RequestParam String password, Model model) {
+    try {
+        String gatewayBaseUrl = "http://localhost:8087";
+        String deleteUrl = gatewayBaseUrl + "/user-service/delete-user?userId=" + userId;
+        restTemplate.postForEntity(deleteUrl, null, String.class);
+        
+        // After successful deletion, redirect to login with credentials to reload the page
+        return "redirect:/web-app/login-and-continue?username=" + username + "&password=" + password;
+    } catch (Exception e) {
+        e.printStackTrace();
+        // On error, still try to reload
+        return "redirect:/web-app/login-and-continue?username=" + username + "&password=" + password;
+    }
+}
+
+@GetMapping("/login-and-continue")
+public String loginAndContinue(@RequestParam String username, @RequestParam String password, Model model) {
+    // Reuse the login logic
+    return processLogin(username, password, model);
 }
 }

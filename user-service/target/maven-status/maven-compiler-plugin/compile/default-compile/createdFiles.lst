@@ -1,3 +1,6 @@
+com\fiserv\userservice\dto\UserPersonDTO.class
 com\fiserv\userservice\dto\UserDTO.class
 com\fiserv\userservice\controller\UserController.class
+com\fiserv\userservice\dto\PersonDTO.class
+com\fiserv\userservice\util\UserCsvReader.class
 com\fiserv\userservice\UserServiceApplication.class

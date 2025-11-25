@@ -37,4 +37,21 @@ public class ContactController {
         }
         return null;
     }
+    
+    @org.springframework.web.bind.annotation.DeleteMapping("/delete/{contactId}")
+    public void deleteContact(@org.springframework.web.bind.annotation.PathVariable Integer contactId) throws java.io.IOException {
+        java.util.List<ContactDTO> contacts = com.fiserv.contactservice.util.ContactCsvReader.readContactsFromCsv("contact.csv");
+        contacts.removeIf(c -> c.getContactId().equals(contactId));
+        
+        // Rewrite the CSV file
+        java.io.File file = new java.io.File("src/main/resources/contact.csv");
+        try (java.io.FileWriter fw = new java.io.FileWriter(file, false)) {
+            fw.write("contactId,primaryMobileNumber,secondaryMobileNumber,primaryEmail,secondaryEmail\n");
+            for (ContactDTO contact : contacts) {
+                fw.write(contact.getContactId() + "," + contact.getPrimaryMobileNumber() + "," + 
+                        contact.getSecondaryMobileNumber() + "," + contact.getPrimaryEmail() + "," + 
+                        contact.getSecondaryEmail() + "\n");
+            }
+        }
+    }
 }

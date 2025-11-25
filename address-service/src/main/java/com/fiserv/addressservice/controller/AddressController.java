@@ -43,4 +43,22 @@ public class AddressController {
         }
         return null;
     }
+    
+    @org.springframework.web.bind.annotation.DeleteMapping("/delete/{addressId}")
+    public void deleteAddress(@org.springframework.web.bind.annotation.PathVariable Integer addressId) throws IOException {
+        List<AddressDTO> addresses = com.fiserv.addressservice.util.AddressCsvReader.readAddressesFromCsv("address.csv");
+        addresses.removeIf(a -> a.getAddressId().equals(addressId));
+        
+        // Rewrite the CSV file
+        java.io.File file = new java.io.File("src/main/resources/address.csv");
+        try (java.io.FileWriter fw = new java.io.FileWriter(file, false)) {
+            fw.write("addressId,houseNumber,streetNumber,city,state,country,pinCode\n");
+            for (AddressDTO address : addresses) {
+                fw.write(address.getAddressId() + "," + address.getHouseNumber() + "," + 
+                        address.getStreetNumber() + "," + address.getCity() + "," + 
+                        address.getState() + "," + address.getCountry() + "," + 
+                        address.getPinCode() + "\n");
+            }
+        }
+    }
 }

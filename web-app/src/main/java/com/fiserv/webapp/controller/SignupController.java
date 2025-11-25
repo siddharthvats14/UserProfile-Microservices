@@ -22,7 +22,19 @@ public class SignupController {
     private RestTemplate restTemplate;
 
     @GetMapping("/signup")
-    public String showSignupForm() {
+    public String showSignupForm(Model model) {
+        try {
+            String gatewayBaseUrl = "http://localhost:8087";
+            String rolesUrl = gatewayBaseUrl + "/role-service/roles";
+            System.out.println("[SignupController] Fetching roles from: " + rolesUrl);
+            java.util.List<?> roles = restTemplate.getForObject(rolesUrl, java.util.List.class);
+            System.out.println("[SignupController] Roles fetched: " + roles);
+            model.addAttribute("roles", roles);
+        } catch (Exception e) {
+            System.err.println("[SignupController] Error fetching roles: " + e.getMessage());
+            e.printStackTrace();
+            model.addAttribute("roles", new java.util.ArrayList<>());
+        }
         return "signup";
     }
 
@@ -40,6 +52,7 @@ public class SignupController {
             signupData.put("name", params.getOrDefault("name", ""));
             signupData.put("lastName", params.getOrDefault("lastName", ""));
             signupData.put("age", params.getOrDefault("age", ""));
+            signupData.put("roleId", params.getOrDefault("roleId", ""));
             signupData.put("houseNumber", params.getOrDefault("houseNumber", ""));
             signupData.put("streetNumber", params.getOrDefault("streetNumber", ""));
             signupData.put("city", params.getOrDefault("city", ""));

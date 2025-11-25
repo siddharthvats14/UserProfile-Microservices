@@ -35,18 +35,15 @@ public class PersonController {
         person.setPersonId(personId);
         person.setFirstName(data.getOrDefault("name", ""));
 
-        System.out.println("[PersonController] Received data from user-service: " + data);
         String lastNameValue = data.get("lastName");
         if (lastNameValue == null || lastNameValue.trim().equalsIgnoreCase("null")) {
             lastNameValue = "";
         }
-        System.out.println("[PersonController] Processed lastName for saving: " + lastNameValue);
         person.setLastName(lastNameValue); 
         person.setRoleId(PersonController.parseIntSafe(data.get("roleId"), 0));
         person.setAddressId(PersonController.parseIntSafe(data.get("addressId"), 0));
         person.setContactId(PersonController.parseIntSafe(data.get("contactId"), 0));
         person.setAge(PersonController.parseIntSafe(data.get("age"), 0));
-        System.out.println("[PersonController] Constructed PersonDTO: personId=" + person.getPersonId() + ", firstName=" + person.getFirstName() + ", lastName=" + person.getLastName() + ", roleId=" + person.getRoleId() + ", addressId=" + person.getAddressId() + ", contactId=" + person.getContactId() + ", age=" + person.getAge());
         com.fiserv.personservice.util.PersonCsvReader.appendPersonToCsv("src/main/resources/person.csv", person);
         java.util.Map<String, Object> result = new java.util.HashMap<>();
         result.put("personId", personId);
@@ -61,5 +58,23 @@ public class PersonController {
             }
         }
         return null;
+    }
+    
+    @org.springframework.web.bind.annotation.DeleteMapping("/delete/{personId}")
+    public void deletePerson(@org.springframework.web.bind.annotation.PathVariable Integer personId) throws IOException {
+        List<PersonDTO> persons = PersonCsvReader.readPersonsFromCsv("person.csv");
+        persons.removeIf(p -> p.getPersonId().equals(personId));
+        
+        // Rewrite the CSV file
+        java.io.File file = new java.io.File("src/main/resources/person.csv");
+        try (java.io.FileWriter fw = new java.io.FileWriter(file, false)) {
+            fw.write("personId,firstName,lastName,roleId,addressId,contactId,age\n");
+            for (PersonDTO person : persons) {
+                fw.write(person.getPersonId() + "," + person.getFirstName() + "," + 
+                        (person.getLastName() != null ? person.getLastName() : "") + "," + 
+                        person.getRoleId() + "," + person.getAddressId() + "," + 
+                        person.getContactId() + "," + person.getAge() + "\n");
+            }
+        }
     }
 }

@@ -4,11 +4,10 @@ addressId,houseNumber,streetNumber,city,state,country,pinCode
 303,303,Pine Rd,Laketown,FL,USA,33801
 404,404,Maple Dr,Greenville,SC,USA,29601
 505,505,Birch Ln,Franklin,MA,USA,02038506
-
 506,123 Sector ABC ,2,Noida,UP,India,123456
 507,32 Sector AB,90,Noida,UP,India,321456
 508,32 Sector AB,90,Noida,UP,India,321456
 509,43 Sector TL,34,Noida,UP,India,765890
-510,43 Sector O,4,Noida,UP,India,876091
-511,null,null,null,null,null,null
-512,ABC 21,1,Noida,Uttar Pradesh,India,123123
+512,213,12,Noida,UP,India,123321
+513,231,1,Meerut,Uttar Pradesh,India,123321
+514,21,2,pune,Maharashtra ,India,123321

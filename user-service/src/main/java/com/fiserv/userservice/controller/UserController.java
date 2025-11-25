@@ -20,11 +20,7 @@ import java.util.HashMap;
 public class UserController {
     @PostMapping("/user-service/signup")
     public ResponseEntity<?> signup(@RequestBody Map<String, String> signupData) {
-        System.out.println("[UserController] SignupData keys: " + signupData.keySet());
-        System.out.println("[UserController] SignupData values: " + signupData);
-        System.out.println("[UserController] Received from frontend lastName: " + signupData.get("lastName"));
         try {
-
             // 1. Call address-service to create address
             RestTemplate restTemplate = new RestTemplate();
             Map<String, Object> addressRequest = new HashMap<>();
@@ -55,7 +51,6 @@ public class UserController {
             personRequest.put("age", signupData.get("age"));
             personRequest.put("addressId", addressId);
             personRequest.put("contactId", contactId);
-            System.out.println("Forwarding lastName to person-service: " + personRequest.get("lastName")); 
             if (signupData.containsKey("roleId")) {
                 personRequest.put("roleId", signupData.get("roleId"));
             }
@@ -78,7 +73,6 @@ public class UserController {
             newUser.setPassword(password);
             newUser.setPersonId(personId);
             newUser.setRetry(0);
-            System.out.println("[UserController] Constructed UserDTO: userId=" + newUser.getUserId() + ", loginName=" + newUser.getLoginName() + ", password=" + newUser.getPassword() + ", personId=" + newUser.getPersonId() + ", retry=" + newUser.getRetry());
             UserCsvReader.appendUserToCsv("src/main/resources/user.csv", newUser);
 
             Map<String, Object> result = new HashMap<>();
@@ -98,9 +92,7 @@ public class UserController {
     List<UserDTO> users = UserCsvReader.readUsersFromCsv("src/main/resources/user.csv");
         String loginNameTrimmed = loginName.trim();
         String passwordTrimmed = password.trim();
-        System.out.println("Login attempt: '" + loginNameTrimmed + "', password: '" + passwordTrimmed + "'");
         for (UserDTO user : users) {
-            System.out.println("Checking user: '" + user.getLoginName() + "', password: '" + user.getPassword() + "'");
             if (user.getLoginName().trim().equals(loginNameTrimmed) && user.getPassword().trim().equals(passwordTrimmed)) {
                 Map<String, Object> result = new HashMap<>();
                 result.put("user", user);
@@ -145,5 +137,119 @@ public class UserController {
         Map<String, String> error = new HashMap<>();
         error.put("error", "Authentication failed: Invalid username or password.");
         return ResponseEntity.status(401).body(error);
+    }
+
+    @GetMapping("/user-service/users")
+    public ResponseEntity<?> getAllUsers() throws IOException {
+        try {
+            List<UserDTO> users = UserCsvReader.readUsersFromCsv("src/main/resources/user.csv");
+            java.util.List<Map<String, Object>> userDetailsList = new java.util.ArrayList<>();
+            RestTemplate restTemplate = new RestTemplate();
+            
+            for (UserDTO user : users) {
+                Map<String, Object> userDetails = new HashMap<>();
+                userDetails.put("userId", user.getUserId());
+                userDetails.put("loginName", user.getLoginName());
+                userDetails.put("personId", user.getPersonId());
+                
+                // Fetch person details
+                try {
+                    String personServiceUrl = "http://localhost:8087/person-service/person/" + user.getPersonId();
+                    ResponseEntity<Map> personResponse = restTemplate.getForEntity(personServiceUrl, Map.class);
+                    Map<String, Object> person = personResponse.getBody();
+                    if (person != null) {
+                        userDetails.put("firstName", person.get("firstName"));
+                        userDetails.put("lastName", person.get("lastName"));
+                        userDetails.put("age", person.get("age"));
+                        userDetails.put("roleId", person.get("roleId"));
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error fetching person for userId " + user.getUserId() + ": " + e.getMessage());
+                }
+                
+                userDetailsList.add(userDetails);
+            }
+            
+            return ResponseEntity.ok(userDetailsList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching users: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/user-service/delete-user")
+    public ResponseEntity<?> deleteUser(@RequestParam Integer userId) {
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            
+            // First, find the user to get personId, addressId, contactId
+            List<UserDTO> users = UserCsvReader.readUsersFromCsv("src/main/resources/user.csv");
+            UserDTO userToDelete = users.stream()
+                .filter(u -> u.getUserId().equals(userId))
+                .findFirst()
+                .orElse(null);
+            
+            if (userToDelete == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            }
+            
+            Integer personId = userToDelete.getPersonId();
+            
+            // Delete from person-service (which will give us addressId and contactId)
+            String personUrl = "http://localhost:8087/person-service/person/" + personId;
+            ResponseEntity<Map> personResponse = restTemplate.getForEntity(personUrl, Map.class);
+            Integer addressId = null;
+            Integer contactId = null;
+            
+            if (personResponse.getStatusCode() == HttpStatus.OK && personResponse.getBody() != null) {
+                addressId = (Integer) personResponse.getBody().get("addressId");
+                contactId = (Integer) personResponse.getBody().get("contactId");
+            }
+            
+            // Delete from address-service
+            if (addressId != null) {
+                String deleteAddressUrl = "http://localhost:8087/address-service/delete/" + addressId;
+                try {
+                    restTemplate.delete(deleteAddressUrl);
+                } catch (Exception e) {
+                    System.out.println("Error deleting address: " + e.getMessage());
+                }
+            }
+            
+            // Delete from contact-service
+            if (contactId != null) {
+                String deleteContactUrl = "http://localhost:8087/contact-service/delete/" + contactId;
+                try {
+                    restTemplate.delete(deleteContactUrl);
+                } catch (Exception e) {
+                    System.out.println("Error deleting contact: " + e.getMessage());
+                }
+            }
+            
+            // Delete from person-service
+            String deletePersonUrl = "http://localhost:8087/person-service/delete/" + personId;
+            try {
+                restTemplate.delete(deletePersonUrl);
+            } catch (Exception e) {
+                System.out.println("Error deleting person: " + e.getMessage());
+            }
+            
+            // Delete from user.csv
+            users.removeIf(u -> u.getUserId().equals(userId));
+            
+            // Rewrite the user CSV file
+            java.io.File file = new java.io.File("src/main/resources/user.csv");
+            try (java.io.FileWriter fw = new java.io.FileWriter(file, false)) {
+                fw.write("userId,loginName,password,personId,retry\n");
+                for (UserDTO user : users) {
+                    fw.write(user.getUserId() + "," + user.getLoginName() + "," + user.getPassword() + "," + user.getPersonId() + "," + user.getRetry() + "\n");
+                }
+            }
+            
+            return ResponseEntity.ok("User deleted successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting user: " + e.getMessage());
+        }
     }
 }
