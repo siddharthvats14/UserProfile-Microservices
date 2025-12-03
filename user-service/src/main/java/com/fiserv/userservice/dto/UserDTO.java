@@ -6,6 +6,7 @@ public class UserDTO {
     private String password;
     private Integer personId;
     private Integer retry;
+    private Long lockedUntil; // Timestamp when account will be unlocked
 
     // Getters and Setters
     public Integer getUserId() { return userId; }
@@ -18,4 +19,6 @@ public class UserDTO {
     public void setPersonId(Integer personId) { this.personId = personId; }
     public Integer getRetry() { return retry; }
     public void setRetry(Integer retry) { this.retry = retry; }
+    public Long getLockedUntil() { return lockedUntil; }
+    public void setLockedUntil(Long lockedUntil) { this.lockedUntil = lockedUntil; }
 }

@@ -61,4 +61,41 @@ public class AddressController {
             }
         }
     }
+    
+    @org.springframework.web.bind.annotation.PutMapping("/address/{addressId}")
+    public AddressDTO updateAddress(@org.springframework.web.bind.annotation.PathVariable Integer addressId, 
+                                     @org.springframework.web.bind.annotation.RequestBody java.util.Map<String, String> data) throws IOException {
+        List<AddressDTO> addresses = com.fiserv.addressservice.util.AddressCsvReader.readAddressesFromCsv("address.csv");
+        AddressDTO addressToUpdate = null;
+        
+        for (AddressDTO address : addresses) {
+            if (address.getAddressId().equals(addressId)) {
+                addressToUpdate = address;
+                break;
+            }
+        }
+        
+        if (addressToUpdate != null) {
+            if (data.containsKey("houseNumber")) addressToUpdate.setHouseNumber(data.get("houseNumber"));
+            if (data.containsKey("streetNumber")) addressToUpdate.setStreetNumber(data.get("streetNumber"));
+            if (data.containsKey("city")) addressToUpdate.setCity(data.get("city"));
+            if (data.containsKey("state")) addressToUpdate.setState(data.get("state"));
+            if (data.containsKey("country")) addressToUpdate.setCountry(data.get("country"));
+            if (data.containsKey("pincode")) addressToUpdate.setPinCode(data.get("pincode"));
+            
+            // Rewrite the CSV file
+            java.io.File file = new java.io.File("src/main/resources/address.csv");
+            try (java.io.FileWriter fw = new java.io.FileWriter(file, false)) {
+                fw.write("addressId,houseNumber,streetNumber,city,state,country,pinCode\n");
+                for (AddressDTO address : addresses) {
+                    fw.write(address.getAddressId() + "," + address.getHouseNumber() + "," + 
+                            address.getStreetNumber() + "," + address.getCity() + "," + 
+                            address.getState() + "," + address.getCountry() + "," + 
+                            address.getPinCode() + "\n");
+                }
+            }
+        }
+        
+        return addressToUpdate;
+    }
 }

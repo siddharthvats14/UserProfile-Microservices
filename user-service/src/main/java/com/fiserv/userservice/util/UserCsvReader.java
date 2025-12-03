@@ -24,12 +24,12 @@ public class UserCsvReader {
             }
             try (java.io.FileWriter fw = new java.io.FileWriter(file, true)) {
                 if (!fileExists) {
-                    fw.write("userId,loginName,password,personId,retry\n");
+                    fw.write("userId,loginName,password,personId,retry,lockedUntil\n");
                 }
                 if (needsNewline) {
                     fw.write("\n");
                 }
-                fw.write(user.getUserId() + "," + user.getLoginName() + "," + user.getPassword() + "," + user.getPersonId() + "," + (user.getRetry() != null ? user.getRetry() : 0) + "\n");
+                fw.write(user.getUserId() + "," + user.getLoginName() + "," + user.getPassword() + "," + user.getPersonId() + "," + (user.getRetry() != null ? user.getRetry() : 0) + "," + (user.getLockedUntil() != null ? user.getLockedUntil() : 0) + "\n");
             }
         }
     public static List<UserDTO> readUsersFromCsv(String filePath) throws IOException {
@@ -51,6 +51,11 @@ public class UserCsvReader {
                 user.setPassword(parts[2]);
                 user.setPersonId(Integer.valueOf(parts[3]));
                 user.setRetry(Integer.valueOf(parts[4]));
+                if (parts.length >= 6 && !parts[5].isEmpty()) {
+                    user.setLockedUntil(Long.valueOf(parts[5]));
+                } else {
+                    user.setLockedUntil(0L);
+                }
                 users.add(user);
                 System.out.println("Loaded user: " + user.getLoginName() + ", password: " + user.getPassword());
             }

@@ -1,3 +1,8 @@
+com\fiserv\personservice\util\ContactCsvReader.class
+com\fiserv\personservice\util\AddressCsvReader.class
 com\fiserv\personservice\PersonServiceApplication.class
 com\fiserv\personservice\controller\PersonController.class
+com\fiserv\personservice\util\PersonCsvReader.class
+com\fiserv\personservice\dto\AddressDTO.class
+com\fiserv\personservice\dto\ContactDTO.class
 com\fiserv\personservice\dto\PersonDTO.class

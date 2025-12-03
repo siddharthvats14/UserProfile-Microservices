@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Profile</title>
+    <style>
+        body {
+            background: #f4f6f8;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            padding: 2rem;
+            margin: 0;
+        }
+        .edit-card {
+            background: #fff;
+            padding: 2.5rem;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .page-title {
+            text-align: center;
+            font-size: 1.8rem;
+            color: #2d3748;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+        .success {
+            color: #38a169;
+            background: #f0fff4;
+            border: 1px solid #9ae6b4;
+            border-radius: 8px;
+            padding: 0.85rem 1rem;
+            margin-bottom: 1.2rem;
+            text-align: center;
+            font-weight: 500;
+        }
+        .error {
+            color: #e53e3e;
+            background: #fff5f5;
+            border: 1px solid #feb2b2;
+            border-radius: 8px;
+            padding: 0.85rem 1rem;
+            margin-bottom: 1.2rem;
+            text-align: left;
+            font-weight: 500;
+        }
+        .section-title {
+            font-size: 1.2rem;
+            color: #3182ce;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.4rem;
+            color: #4a5568;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        input[type="text"], input[type="email"], input[type="number"] {
+            width: 100%;
+            padding: 0.7rem;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            font-size: 1rem;
+            background: #f7fafc;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
+        input:focus {
+            border-color: #3182ce;
+            outline: none;
+            background: #fff;
+        }
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        button, .cancel-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+        button[type="submit"] {
+            background: #805ad5;
+            color: #fff;
+        }
+        button[type="submit"]:hover {
+            background: #6b46c1;
+        }
+        .cancel-btn {
+            background: #718096;
+            color: #fff;
+        }
+        .cancel-btn:hover {
+            background: #4a5568;
+        }
+    </style>
+</head>
+<body>
+    <div class="edit-card">
+        <div class="page-title">Edit Your Profile</div>
+        
+        <div th:if="${success}" class="success" th:text="${success}">Profile updated successfully!</div>
+        <div th:if="${error}" class="error" th:text="${error}">Error updating profile!</div>
+        
+        <form th:action="@{/web-app/edit-profile}" method="post">
+            <input type="hidden" name="username" th:value="${username}" />
+            <input type="hidden" name="password" th:value="${password}" />
+            <input type="hidden" name="personId" th:value="${personId}" />
+            <input type="hidden" name="addressId" th:value="${addressId}" />
+            <input type="hidden" name="contactId" th:value="${contactId}" />
+            
+            <div class="section-title">Personal Information</div>
+            
+            <div class="form-group">
+                <label for="firstName">First Name *</label>
+                <input type="text" id="firstName" name="firstName" th:value="${firstName}" required />
+            </div>
+            
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" name="lastName" th:value="${lastName}" />
+            </div>
+            
+            <div class="form-group">
+                <label for="age">Age *</label>
+                <input type="number" id="age" name="age" th:value="${age}" min="1" max="150" required />
+            </div>
+            
+            <div class="section-title">Address Details</div>
+            
+            <div class="form-group">
+                <label for="houseNumber">House Number</label>
+                <input type="text" id="houseNumber" name="houseNumber" th:value="${houseNumber}" />
+            </div>
+            
+            <div class="form-group">
+                <label for="streetNumber">Street Number</label>
+                <input type="text" id="streetNumber" name="streetNumber" th:value="${streetNumber}" />
+            </div>
+            
+            <div class="form-group">
+                <label for="city">City</label>
+                <input type="text" id="city" name="city" th:value="${city}" />
+            </div>
+            
+            <div class="form-group">
+                <label for="state">State</label>
+                <input type="text" id="state" name="state" th:value="${state}" />
+            </div>
+            
+            <div class="form-group">
+                <label for="country">Country</label>
+                <input type="text" id="country" name="country" th:value="${country}" />
+            </div>
+            
+            <div class="form-group">
+                <label for="pincode">Pincode</label>
+                <input type="text" id="pincode" name="pincode" th:value="${pincode}" />
+            </div>
+            
+            <div class="section-title">Contact Information</div>
+            
+            <div class="form-group">
+                <label for="primaryContact">Primary Mobile Number</label>
+                <input type="text" id="primaryContact" name="primaryContact" th:value="${primaryContact}" />
+            </div>
+            
+            <div class="form-group">
+                <label for="secondaryContact">Secondary Mobile Number</label>
+                <input type="text" id="secondaryContact" name="secondaryContact" th:value="${secondaryContact}" />
+            </div>
+            
+            <div class="form-group">
+                <label for="primaryEmail">Primary Email</label>
+                <input type="email" id="primaryEmail" name="primaryEmail" th:value="${primaryEmail}" />
+            </div>
+            
+            <div class="form-group">
+                <label for="secondaryEmail">Secondary Email</label>
+                <input type="email" id="secondaryEmail" name="secondaryEmail" th:value="${secondaryEmail}" />
+            </div>
+            
+            <div class="button-group">
+                <button type="submit">Update Profile</button>
+                <a th:href="@{/web-app/login-and-continue(username=${username},password=${password})}" class="cancel-btn">Cancel</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

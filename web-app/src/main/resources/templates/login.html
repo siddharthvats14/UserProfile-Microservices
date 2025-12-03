@@ -28,12 +28,20 @@
         .error {
             color: #e53e3e;
             background: #fff5f5;
-            border: 1px solid #e53e3e;
-            border-radius: 6px;
-            padding: 0.5rem;
-            margin-bottom: 1rem;
-            text-align: center;
+            border: 1px solid #feb2b2;
+            border-radius: 8px;
+            padding: 0.85rem 1rem;
+            margin-bottom: 1.2rem;
+            text-align: left;
             font-weight: 500;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            box-shadow: 0 2px 8px rgba(229, 62, 62, 0.1);
+        }
+        .error::before {
+            content: "⚠ ";
+            font-weight: bold;
+            margin-right: 0.3rem;
         }
         label {
             display: block;

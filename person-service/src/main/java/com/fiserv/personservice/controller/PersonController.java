@@ -77,4 +77,38 @@ public class PersonController {
             }
         }
     }
+    
+    @org.springframework.web.bind.annotation.PutMapping("/person/{personId}")
+    public PersonDTO updatePerson(@org.springframework.web.bind.annotation.PathVariable Integer personId, 
+                                   @org.springframework.web.bind.annotation.RequestBody java.util.Map<String, String> data) throws IOException {
+        List<PersonDTO> persons = PersonCsvReader.readPersonsFromCsv("person.csv");
+        PersonDTO personToUpdate = null;
+        
+        for (PersonDTO person : persons) {
+            if (person.getPersonId().equals(personId)) {
+                personToUpdate = person;
+                break;
+            }
+        }
+        
+        if (personToUpdate != null) {
+            if (data.containsKey("firstName")) personToUpdate.setFirstName(data.get("firstName"));
+            if (data.containsKey("lastName")) personToUpdate.setLastName(data.get("lastName"));
+            if (data.containsKey("age")) personToUpdate.setAge(PersonController.parseIntSafe(data.get("age"), personToUpdate.getAge()));
+            
+            // Rewrite the CSV file
+            java.io.File file = new java.io.File("src/main/resources/person.csv");
+            try (java.io.FileWriter fw = new java.io.FileWriter(file, false)) {
+                fw.write("personId,firstName,lastName,roleId,addressId,contactId,age\n");
+                for (PersonDTO person : persons) {
+                    fw.write(person.getPersonId() + "," + person.getFirstName() + "," + 
+                            (person.getLastName() != null ? person.getLastName() : "") + "," + 
+                            person.getRoleId() + "," + person.getAddressId() + "," + 
+                            person.getContactId() + "," + person.getAge() + "\n");
+                }
+            }
+        }
+        
+        return personToUpdate;
+    }
 }

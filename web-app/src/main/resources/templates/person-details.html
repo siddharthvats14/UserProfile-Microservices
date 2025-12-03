@@ -82,6 +82,24 @@
         .add-user-btn:hover {
             background: #2f855a;
         }
+        .edit-profile-btn {
+            display: block;
+            width: 100%;
+            margin-top: 1rem;
+            padding: 0.7rem;
+            background: #805ad5;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .edit-profile-btn:hover {
+            background: #6b46c1;
+        }
         .users-table {
             width: 100%;
             border-collapse: collapse;
@@ -181,6 +199,9 @@
             </table>
         </div>
 
+        <!-- Edit Profile button for all users -->
+        <a th:href="@{/web-app/edit-profile(username=${username},password=${password})}" class="edit-profile-btn">Edit Profile</a>
+        
         <!-- Add User button for ADMIN only -->
         <a th:if="${roleId == 1}" th:href="@{/web-app/signup(adminMode=true,adminUsername=${username},adminPassword=${password})}" class="add-user-btn">Add User</a>
         
